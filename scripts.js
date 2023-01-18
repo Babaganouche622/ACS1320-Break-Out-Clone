@@ -20,7 +20,6 @@ for (let c = 0; c < brickColumnCount; c += 1) {
   }
 }
 
-
 let paddleX = (canvas.width - paddleWidth) / 2;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
