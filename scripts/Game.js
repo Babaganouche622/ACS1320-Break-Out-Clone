@@ -79,7 +79,8 @@ class Game {
             this.ball.dy = -this.ball.dy;
             brick.status = 0;
             this.score.addPoint();
-            if (this.score === this.bricks.rows * this.bricks.columns) {
+            this.ball.colourChange();
+            if (this.score.score === this.bricks.rows * this.bricks.columns) {
               // eslint-disable-next-line no-alert
               alert('YOU WIN, CONGRATULATIONS!');
               document.location.reload();
@@ -102,12 +103,14 @@ class Game {
     if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius
       || this.ball.x + this.ball.dx < this.ball.radius) {
       this.ball.dx = -this.ball.dx;
+      this.ball.colourChange();
     }
     if (this.ball.y + this.ball.dy < this.ball.radius) {
       this.ball.dy = -this.ball.dy;
     } else if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius) {
       if (this.ball.x > this.paddle.x && this.ball.x < this.paddle.x + this.paddle.width) {
         this.ball.dy = -this.ball.dy;
+        this.ball.colourChange();
       } else {
         this.lives.loseLives();
         if (!this.lives.lives) {
