@@ -1,13 +1,34 @@
-/* eslint-disable import/extensions */
-import Ball from './Ball.js';
-import Paddle from './Paddle.js';
-import Score from './Score.js';
-import Lives from './Lives.js';
-import BackgroundCover from './BackgroundCover.js';
-import Bricks from './Bricks.js';
+import Ball from './Ball';
+import Paddle from './Paddle';
+import Score from './Score';
+import Lives from './Lives';
+import BackgroundCover from './BackgroundCover';
+import Bricks from './Bricks';
+import { HEX } from './Sprite';
+
+interface Game {
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  brickRowCount: number,
+  brickColumnCount: number,
+  brickWidth: number,
+  brickHeight: number,
+  brickPadding: number,
+  brickOffsetTop: number,
+  brickOffsetLeft: number,
+  brickColour: HEX,
+  score: Score,
+  lives: Lives,
+  ball: Ball,
+  paddle: Paddle,
+  bricks: Bricks,
+  background: BackgroundCover,
+  rightPressed: boolean,
+  leftPressed: boolean,
+}
 
 class Game {
-  constructor(canvas, ctx) {
+  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     this.canvas = canvas;
     this.ctx = ctx;
 
@@ -24,16 +45,16 @@ class Game {
     this.lives = new Lives((this.canvas.width - 110), 20, 3);
     this.ball = new Ball((this.canvas.width / 2), (this.canvas.height - 30));
     this.paddle = new Paddle((this.canvas.width - 75) / 2, this.canvas.height - 10);
-    this.bricks = new Bricks({
-      columns: this.brickColumnCount,
-      rows: this.brickRowCount,
-      width: this.brickWidth,
-      height: this.brickHeight,
-      padding: this.brickPadding,
-      offsetTop: this.brickOffsetTop,
-      offsetLeft: this.brickOffsetLeft,
-      colour: this.brickColour,
-    });
+    this.bricks = new Bricks(
+      this.brickColumnCount,
+      this.brickRowCount,
+      this.brickWidth,
+      this.brickHeight,
+      this.brickPadding,
+      this.brickOffsetTop,
+      this.brickOffsetLeft,
+      this.brickColour,
+    );
     this.background = new BackgroundCover(this.canvas.width, this.canvas.height);
 
     this.rightPressed = false;
@@ -93,9 +114,11 @@ class Game {
 
   movePaddle() {
     if (this.rightPressed && this.paddle.x < this.canvas.width - this.paddle.width) {
-      this.paddle.move(7, 0);
+      this.paddle.dx = 7;
+      this.paddle.move();
     } else if (this.leftPressed && this.paddle.x > 0) {
-      this.paddle.move(-7, 0);
+      this.paddle.dx = -7
+      this.paddle.move();
     }
   }
 
@@ -124,14 +147,14 @@ class Game {
     }
   }
 
-  mouseMoveHandler(e) {
+  mouseMoveHandler(e: MouseEvent) {
     const relativeX = e.clientX - this.canvas.offsetLeft;
     if (relativeX > 0 && relativeX < this.canvas.width) {
       this.paddle.x = relativeX - this.paddle.width / 2;
     }
   }
 
-  keyDownHandler(e) {
+  keyDownHandler(e: KeyboardEvent) {
     if (e.key === 'Right' || e.key === 'ArrowRight') {
       this.rightPressed = true;
     } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
@@ -139,7 +162,7 @@ class Game {
     }
   }
 
-  keyUpHandler(e) {
+  keyUpHandler(e: KeyboardEvent) {
     if (e.key === 'Right' || e.key === 'ArrowRight') {
       this.rightPressed = false;
     } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
@@ -154,8 +177,8 @@ class Game {
     this.score.render(this.ctx);
     this.lives.render(this.ctx);
     this.ball.render(this.ctx);
-    this.paddle.render(this.ctx, this.canvas);
-    this.ball.move(this.ball.dx, this.ball.dy);
+    this.paddle.render(this.ctx);
+    this.ball.move();
     this.movePaddle();
     this.collisionWallsDetection();
     this.collisionDetection();

@@ -1,10 +1,21 @@
-/* eslint-disable import/extensions */
-import Brick from './Brick.js';
+import Brick from './Brick';
+import { HEX } from './Sprite';
 
-class Bricks {
-  constructor({
-    columns, rows, width, height, padding, offsetTop, offsetLeft, colour,
-  }) {
+interface Bricks {
+  columns: number,
+  rows: number,
+  bricks: Brick[][],
+  width: number,
+  height: number,
+  padding: number,
+  offsetTop: number,
+  offsetLeft: number,
+  colour: HEX,
+}
+
+
+class Bricks implements Bricks {
+  constructor(columns:number, rows:number, width:number, height:number, padding:number, offsetTop:number, offsetLeft:number, colour:HEX) {
     this.columns = columns;
     this.rows = rows;
     this.bricks = [];
@@ -29,7 +40,7 @@ class Bricks {
     }
   }
 
-  render(ctx) {
+  render(ctx: CanvasRenderingContext2D) {
     for (let c = 0; c < this.columns; c += 1) {
       for (let r = 0; r < this.rows; r += 1) {
         const brick = this.bricks[c][r];
